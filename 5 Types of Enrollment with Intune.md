@@ -1,161 +1,145 @@
-Hello everyone,
+Here is a detailed briefing document reviewing the main themes and most important ideas or facts from the provided excerpts on Windows Autopilot:
 
-Welcome to today's session, where we will discuss **Types of Enrollment with Intune**. This is a Level 100 session focusing on different enrollment methods for various operating systems, including Windows, iOS, macOS, and Android.
+# Briefing Document: Intune Enrollment Types
 
-## Overview of Enrollment Methods
-Microsoft Intune supports multiple enrollment methods depending on device ownership (corporate or personal) and management requirements.
+**Source:** Excerpts from "#IntuneNugget 5- Types of Enrollment with Intune |Level 100" (Transcript) and "Types of Enrollment with Intune session notes"
 
----
+**Overall Objective:** To provide a "Level 100" introduction to the various methods for enrolling different operating systems into Microsoft Intune. This is a foundational overview, with more in-depth details available in subsequent sessions.
 
-## **iOS/macOS Enrollment Methods**
-### 1. Manual Enrollment (BYOD - Bring Your Own Device)
-**Steps:**
-1. Install the **Company Portal App** from the App Store.
-2. Open the app and sign in using **work credentials**.
-3. Follow on-screen instructions to allow **device management permissions**.
-4. The device will register with Intune and apply necessary policies.
+**Core Concept:** Intune allows for centralized management of a wide range of devices. Understanding the different enrollment methods is crucial for administrators to effectively onboard and manage these devices based on ownership (personal vs. corporate), scale (individual vs. bulk), and existing infrastructure.
 
-**Prerequisites:**
-- **Intune License** assigned to the user.
-- **APNs Certificate** set up in Intune to enable communication with Apple.
+## Key Themes and Enrollment Types by Operating System:
 
----
+### 1. iOS/macOS Device Enrollment:
 
-### 2. Apple Device Enrollment Program (DEP) - Corporate-Owned Devices
-**Steps:**
-1. Ensure the device is listed in **Apple Business Manager (ABM)**.
-2. In Intune, navigate to **Devices > iOS/iPadOS enrollment > Enrollment program tokens**.
-3. Upload the **DEP token** from ABM.
-4. Create an **Enrollment Profile** to define settings like user affinity and supervision.
-5. Assign the profile to DEP-managed devices.
-6. The device automatically enrolls into Intune upon activation.
+* **APNs (Apple Push Notification Service)**: A fundamental and mandatory intermediary for any MDM service (including Intune) to communicate with iOS/Mac devices. Requires an Apple ID to set up and renew (recommend using a business Apple ID).
 
-**Prerequisites:**
-- **Apple Business Manager** account.
-- **DEP token** imported into Intune.
-- **Supervision mode enabled** for corporate control.
+#### 1.1. Manual Enrollment (BYOD - Bring Your Own Device)
 
----
+* **Use Case**: Primarily for Bring Your Own Device (BYOD) or personal devices.
+* **Method**: User installs the "Company Portal" application from the App Store, opens it, logs in with their work credentials, and follows on-screen instructions to allow device management permissions. The device will then register with Intune and apply necessary policies.
+* **Prerequisites**:
+    * Intune License assigned to the user (direct or part of an EMS E3/E5 suite).
+    * APNs Certificate set up in Intune.
 
-### 3. Apple Configurator Enrollment
-**Steps:**
-1. Install **Apple Configurator** on a **Mac device**.
-2. Connect the iOS device to the Mac via **USB**.
-3. Create an **Enrollment Profile** in Intune.
-4. Apply the profile to the device via Apple Configurator.
-5. The device restarts and is enrolled into Intune.
+#### 1.2. Apple Device Enrollment Program (DEP) - Corporate-Owned Devices
 
-**Prerequisites:**
-- A **Mac device** with **Apple Configurator** installed.
-- **USB cable** for physical connection.
-- **APNs Certificate** for device communication.
+* **Use Case**: Bulk enrollment of corporate-owned iOS and macOS devices.
+* **Method**: Leverages Apple's DEP program. Requires configuration within the Apple Business Manager (ABM) portal. The device automatically enrolls into Intune upon activation.
+* **Prerequisites**:
+    * Apple Business Manager account.
+    * DEP token uploaded from ABM to Intune (**Devices > iOS/iPadOS enrollment > Enrollment program tokens**).
+    * Intune License.
+    * APNs Certificate.
+    * Serial numbers of the devices to be managed (listed in ABM).
+    * Creation of an Enrollment Profile in Intune to define settings like user affinity, supervision, and the "out-of-the-box" experience.
+    * Supervision mode enabled for corporate control.
 
----
+#### 1.3. Apple Configurator Enrollment
 
-## **Windows Enrollment Methods**
-### 1. Manual Enrollment
-**Steps:**
-1. Go to **Settings > Accounts > Access work or school**.
-2. Select **Enroll only in device management**.
-3. Enter **work credentials** and sign in.
-4. Follow on-screen instructions to complete enrollment.
+* **Use Case**: Another possible method, though "not very widely used." Primarily for smaller-scale corporate deployments or when DEP is not feasible.
+* **Method**: Requires a Mac device with "Apple Configurator" software installed. An enrollment profile is created in Intune, and then the profile is applied to the iOS device via a physical USB connection. The device restarts and is enrolled into Intune.
+* **Prerequisites**:
+    * A Mac device with Apple Configurator installed.
+    * Physical access to the iOS device via a USB cable.
+    * Intune service and license.
+    * APNs service.
 
-**Prerequisites:**
-- **Windows 10 version 1607 or later**.
-- **Intune License** assigned to the user.
+### 2. Windows Device Enrollment:
 
----
+#### 2.1. Manual Enrollment ("Enroll only in device management")
 
-### 2. Auto Enrollment
-**Steps:**
-1. In Azure AD, navigate to **Mobility (MDM & MAM) > Microsoft Intune**.
-2. Configure **MDM user scope** (All or Selected Users).
-3. On the Windows device, go to **Settings > Accounts > Access work or school**.
-4. Click **Connect**, enter work credentials, and complete Azure AD Join.
-5. The device is **automatically enrolled into Intune**.
+* **Use Case**: Manual enrollment for individual devices (domain-joined or workgroup).
+* **Method**: User goes to **Start > Settings > Access work or school**, and clicks on the "enroll only in device management" hyperlink, then enters work credentials and signs in.
+* **Prerequisites**:
+    * Windows 10 1607 or later.
+    * Intune License assigned to the user (direct or part of an EMS E3/E5 suite).
+    * **Note**: This method does not perform Azure AD registration.
 
-**Prerequisites:**
-- **Windows 10 version 1607 or later**.
-- **Azure AD Join enabled**.
-- **MDM user scope configured**.
+#### 2.2. Auto Enrollment
 
----
+* **Use Case**: Automatic enrollment triggered by Azure AD registration.
+* **Method**: User goes to **Start > Settings > Access work or school** and clicks "Connect", entering their username and password. This performs Azure AD registration. The device then gets Azure AD registered first, and if the MDM scope is configured, it is **automatically enrolled in Intune**.
+* **Prerequisites**:
+    * Windows 10 1607 or later.
+    * Intune License.
+    * MDM scope must be set for the user performing the Azure AD registration in Azure AD (**Mobility (MDM & MAM) > Microsoft Intune**).
 
-### 3. Group Policy Enrollment (Hybrid Azure AD Join)
-**Steps:**
-1. Ensure the device is **joined to on-prem Active Directory**.
-2. Install and configure **Azure AD Connect** for Hybrid Azure AD Join.
-3. Create a **Group Policy Object (GPO)** for auto-enrollment:
-   - Open **Group Policy Management**.
-   - Navigate to **Computer Configuration > Administrative Templates > Windows Components > MDM**.
-   - Enable **Enable automatic MDM enrollment using default Azure AD credentials**.
-4. Link the GPO to an **Organizational Unit (OU)** with target devices.
-5. Devices will enroll into Intune on their next sign-in.
+#### 2.3. Group Policy Enrollment (Hybrid Azure AD Join)
 
-**Prerequisites:**
-- **Windows 10 version 1709 or later**.
-- **Hybrid Azure AD Join configured**.
-- **MDM user scope set** in Azure AD.
+* **Use Case**: Enrolling machines joined to an on-premises domain.
+* **Method**: Using Group Policy Objects (GPO) to trigger enrollment.
+    * Create a GPO for auto-enrollment: Enable "**Enable automatic MDM enrollment using default Azure AD credentials**" under **Computer Configuration > Administrative Templates > Windows Components > MDM**.
+    * Link the GPO to an Organizational Unit (OU) with target devices.
+    * Devices will enroll into Intune on their next sign-in.
+* **Prerequisites**:
+    * Windows 10 1709 or later.
+    * Device must be joined to on-prem Active Directory.
+    * Device must be in a **Hybrid Azure AD Join state** (joined to both the on-prem domain and Azure AD, typically configured using Azure AD Connect).
+    * Intune License.
+    * MDM user scope must be set in Azure AD.
 
----
+#### 2.4. Windows Autopilot (Corporate-Owned)
 
-### 4. Windows Autopilot (Corporate-Owned)
-**Steps:**
-1. Obtain **hardware hash** from the device.
-2. Navigate to **Devices > Windows > Windows Enrollment > Devices** in Intune.
-3. Upload the **hardware hash**.
-4. Create an **Autopilot Profile** to define user experience.
-5. Assign the profile to the **Autopilot devices**.
-6. The device will automatically join Azure AD and enroll into Intune upon first boot.
+* **Use Case**: Bulk deployment and enrollment of corporate-owned Windows devices, automating Azure AD Join and Intune enrollment during the Out-of-Box Experience (OOBE).
+* **Method**: The device, upon first boot (or factory reset), automatically fetches its Autopilot profile and proceeds with pre-configured setup.
+* **Prerequisites**:
+    * Windows 10 1703 or later.
+    * **Azure AD Premium license** (part of EMS suite) is required because the device gets Azure AD joined. An Intune direct license is not sufficient.
+    * Hardware hash (like a serial number) of the devices needs to be uploaded to Intune (**Devices > Windows > Windows Enrollment > Devices**, then **Import**).
+    * MDM scope for the user must be set.
+    * An Autopilot profile must be created to define the OOBE and user experience.
+    * Can be configured for **Hybrid Azure AD Join Autopilot** (joins on-prem domain and Azure AD) or **Normal Autopilot** (Azure AD join only). Hybrid Azure AD Join Autopilot requires additional setup like an ODJ connector and a domain join profile.
+    * **Self-deploying Autopilot** requires a physical machine with a TPM 2.0 chip.
+    * Device needs to be system reset or fresh out of the box.
 
-**Prerequisites:**
-- **Windows 10 version 1703 or later**.
-- **Azure AD Premium license**.
-- **Hardware hash registered in Intune**.
+#### 2.5. Co-management with SCCM
 
----
+* **Use Case**: Enrolling devices currently managed by System Center Configuration Manager (SCCM) into Intune, bringing them into a co-managed state (dual management by SCCM and Intune).
+* **Method**: Leverages SCCM to initiate the enrollment process. SCCM is configured to enable co-management and select workloads to move to Intune.
+* **Prerequisites**:
+    * Windows 10 1709 or later.
+    * SCCM version 1710 or later.
+    * Device must be joined to the on-premises domain (initially managed by SCCM).
+    * Device must be in a **Hybrid Azure AD Join state** (configured using Azure AD Connect).
+    * Intune License (direct or EMS suite).
+    * MDM scope must be set for user-based enrollment.
+    * Optionally, a collection of devices in SCCM if co-management is not enabled for the entire tenant.
+    * No conflicting Group Policies or SCCM policies should be in place.
 
-### 5. Co-Management with SCCM
-**Steps:**
-1. Ensure **SCCM version 1710 or later** is installed.
-2. Enable **Hybrid Azure AD Join**.
-3. In **SCCM**, configure co-management settings and select workloads to move to Intune.
-4. Devices managed by **SCCM** will register with Intune.
+### 3. Android Device Management (Note: This section focuses on management approaches rather than distinct enrollment methods in the same way as iOS/Windows, but covers two broad categories):
 
-**Prerequisites:**
-- **Windows 10 version 1709 or later**.
-- **SCCM configured for co-management**.
-- **Intune License** assigned.
+* **Android version 4.0 or later** (for any Android management).
+* **Intune License** assigned.
 
----
+#### 3.1. Android Device Admin (Legacy)
 
-## **Android Enrollment Methods**
-### 1. Android Enterprise (Work Profile - BYOD)
-**Steps:**
-1. Install **Company Portal App** from Google Play Store.
-2. Open the app and sign in using work credentials.
-3. The device will register and apply policies in a **Work Profile** container.
+* **Use Case**: Manages the "entire device." "Not a very good approach" for BYOD scenarios.
+* **Status**: A "legacy method" that Google is expected to "decommission very soon."
 
-**Prerequisites:**
-- **Android version 5.1 or later**.
-- **Intune License** assigned.
+#### 3.2. Android Enterprise (Recommended and Future Forward)
 
----
+* **Use Case**: Recommended approach, especially for BYOD due to containerization.
+* **Method**: Implements "containerization of data," creating a separate corporate container that Intune manages and is encrypted. The rest of the device is the personal container. Enrollment is done via the Company Portal app.
+* **Prerequisites**: Android version 5.1 or later (specifically mentioned for BYOD).
+* **Flavors for Company-Owned Devices**:
+    * **Device Owner (Fully Managed)**: For company-owned devices where the corporate container is the only container. Enrollment is often done by scanning a QR code or using NFC/zero-touch enrollment.
+    * **COSU (Company Owned Single Use)**: Kiosk-like devices running with only one application. Enrollment is done by scanning a QR code. Requires whitelisting of the single application.
+    * **COBO (Company Owned Business Only)**: Fully managed devices running with multiple business applications. Enrollment is also done using a QR code. Uses the "Microsoft Intune app" (recently released) instead of the Company Portal.
+* **General Prerequisites for Android Enterprise**: Device restriction profiles need to be set to guide users towards the appropriate enrollment method (e.g., ensuring BYOD users enroll as Android Enterprise BYOD). For COSU/COBO, enrollment is often done via QR code scanning instead of username/password.
 
-### 2. Android Enterprise (Fully Managed - Corporate-Owned)
-**Steps:**
-1. Factory reset the Android device.
-2. On the setup screen, scan the **QR Code** generated in Intune.
-3. The device will enroll as a fully managed device.
+## Common Prerequisites Across Operating Systems:
 
-**Prerequisites:**
-- **Android version 6.0 or later**.
-- **Device Enrollment Restrictions configured** in Intune.
+* **Intune License**: A fundamental requirement for a user or device to be managed by Intune. This can be a direct Intune license or part of a larger suite like EMS E3 or E5.
+* **APNs (Apple Push Notification Service)**: Mandatory intermediary for any MDM service to communicate with Apple devices (iOS and and Mac). Requires an Apple ID for setup.
+* **MDM Scope**: For Windows auto-enrollment and Group Policy enrollment, the MDM scope needs to be correctly set for the user in Azure AD to trigger automatic enrollment into Intune after Azure AD registration.
+* **Hybrid Azure AD Join**: A requirement for Windows Group Policy enrollment and Hybrid Azure AD Join Autopilot/Co-management scenarios. This involves devices being joined to both an on-premises Active Directory domain and Azure AD, often configured using Azure AD Connect.
 
----
+## Important Considerations:
 
-## **Summary**
-Microsoft Intune offers multiple enrollment methods to accommodate **personal (BYOD)** and **corporate-owned** devices. Each enrollment type has different **prerequisites and configurations**, making it important to choose the appropriate method based on organizational needs.
+* This nugget provides a "Level 100" overview; detailed setup procedures are covered in subsequent sessions.
+* The choice of enrollment method often depends on device ownership (personal vs. corporate), the need for bulk deployment, and existing infrastructure (e.g., on-premises domain and SCCM).
+* Android Device Admin is a legacy method and Android Enterprise is the recommended path forward.
+* Apple DEP and Windows Autopilot are specifically designed for corporate-owned bulk deployments.
 
-Let me know if you need a detailed walkthrough on any specific enrollment method!
-
+This briefing provides a foundational understanding of the various enrollment options available in Intune. Further detail and configuration steps for each method are available in more advanced resources.
