@@ -16,7 +16,7 @@ This guide explains how to configure **automatic MDM enrollment** in Microsoft I
 - Choose the desired Azure AD group (e.g., `MDM test group 1`)
 - Click **Select** > **Save**
 - You will see a confirmation: _"Successfully updated Microsoft Intune"_
-![MDM Scope Settings](https://raw.githubusercontent.com/saiie5/My-Portifolio/main/1..png)
+![MDM Scope Settings](https://github.com/saiie5/Intune-nuggets/blob/main/1..png))
 
 ## ✅ Step 2: Verify Licensing Requirements
 
